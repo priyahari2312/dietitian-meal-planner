@@ -1,3 +1,5 @@
+Originally built with Team Tech Warriors at ReDi School Copenhagen.
+--------------------------------------------------------------------
 # Web App Dev Starter
 
 This is a starter template for building web apps. It comes with everything set up so you can jump straight into writing features instead of spending hours configuring tools.
