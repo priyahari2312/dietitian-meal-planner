@@ -1,0 +1,36 @@
+export type Food = {
+  id: string
+  name: string
+  // All values per 100g
+  calories_kcal: number
+  carbs_g: number
+  protein_g: number
+  fat_g: number
+  fiber_g: number
+  sodium_mg: number
+  potassium_mg: number
+  phosphorus_mg: number
+}
+
+export const FOODS: Food[] = [
+  { id: 'white-rice',      name: 'White Rice (cooked)',     calories_kcal: 130, carbs_g: 28,   protein_g: 2.7,  fat_g: 0.3,  fiber_g: 0.4, sodium_mg: 1,   potassium_mg: 35,  phosphorus_mg: 43 },
+  { id: 'brown-rice',      name: 'Brown Rice (cooked)',     calories_kcal: 123, carbs_g: 25.6, protein_g: 2.7,  fat_g: 1.0,  fiber_g: 1.6, sodium_mg: 4,   potassium_mg: 79,  phosphorus_mg: 77 },
+  { id: 'whole-wheat',     name: 'Whole Wheat Bread',       calories_kcal: 247, carbs_g: 41,   protein_g: 13,   fat_g: 3.4,  fiber_g: 7,   sodium_mg: 400, potassium_mg: 230, phosphorus_mg: 200 },
+  { id: 'oats',            name: 'Oats (dry)',              calories_kcal: 379, carbs_g: 68,   protein_g: 13.2, fat_g: 6.5,  fiber_g: 10,  sodium_mg: 6,   potassium_mg: 362, phosphorus_mg: 410 },
+  { id: 'eggs',            name: 'Eggs (whole)',            calories_kcal: 155, carbs_g: 1.1,  protein_g: 13,   fat_g: 11,   fiber_g: 0,   sodium_mg: 124, potassium_mg: 126, phosphorus_mg: 172 },
+  { id: 'chicken-breast',  name: 'Chicken Breast (grilled)', calories_kcal: 165, carbs_g: 0,    protein_g: 31,   fat_g: 3.6,  fiber_g: 0,   sodium_mg: 74,  potassium_mg: 256, phosphorus_mg: 228 },
+  { id: 'salmon',          name: 'Salmon (cooked)',         calories_kcal: 208, carbs_g: 0,    protein_g: 20,   fat_g: 13,   fiber_g: 0,   sodium_mg: 59,  potassium_mg: 363, phosphorus_mg: 252 },
+  { id: 'tofu',            name: 'Tofu (firm)',             calories_kcal: 144, carbs_g: 2.8,  protein_g: 17,   fat_g: 9,    fiber_g: 2.3, sodium_mg: 14,  potassium_mg: 237, phosphorus_mg: 190 },
+  { id: 'lentils',         name: 'Lentils (cooked)',        calories_kcal: 116, carbs_g: 20,   protein_g: 9,    fat_g: 0.4,  fiber_g: 8,   sodium_mg: 2,   potassium_mg: 369, phosphorus_mg: 180 },
+  { id: 'black-beans',     name: 'Black Beans (cooked)',    calories_kcal: 132, carbs_g: 23.7, protein_g: 8.9,  fat_g: 0.5,  fiber_g: 8.7, sodium_mg: 1,   potassium_mg: 355, phosphorus_mg: 140 },
+  { id: 'broccoli',        name: 'Broccoli (steamed)',      calories_kcal: 35,  carbs_g: 7.2,  protein_g: 2.4,  fat_g: 0.4,  fiber_g: 3.3, sodium_mg: 41,  potassium_mg: 293, phosphorus_mg: 67 },
+  { id: 'spinach',         name: 'Spinach (raw)',           calories_kcal: 23,  carbs_g: 3.6,  protein_g: 2.9,  fat_g: 0.4,  fiber_g: 2.2, sodium_mg: 79,  potassium_mg: 558, phosphorus_mg: 49 },
+  { id: 'carrots',         name: 'Carrots (raw)',           calories_kcal: 41,  carbs_g: 9.6,  protein_g: 0.9,  fat_g: 0.2,  fiber_g: 2.8, sodium_mg: 69,  potassium_mg: 320, phosphorus_mg: 35 },
+  { id: 'sweet-potato',    name: 'Sweet Potato (baked)',    calories_kcal: 90,  carbs_g: 20.7, protein_g: 2,    fat_g: 0.2,  fiber_g: 3.3, sodium_mg: 36,  potassium_mg: 475, phosphorus_mg: 54 },
+  { id: 'apple',           name: 'Apple (raw)',             calories_kcal: 52,  carbs_g: 14,   protein_g: 0.3,  fat_g: 0.2,  fiber_g: 2.4, sodium_mg: 1,   potassium_mg: 107, phosphorus_mg: 11 },
+  { id: 'banana',          name: 'Banana',                  calories_kcal: 89,  carbs_g: 23,   protein_g: 1.1,  fat_g: 0.3,  fiber_g: 2.6, sodium_mg: 1,   potassium_mg: 358, phosphorus_mg: 22 },
+  { id: 'blueberries',     name: 'Blueberries (raw)',       calories_kcal: 57,  carbs_g: 14,   protein_g: 0.7,  fat_g: 0.3,  fiber_g: 2.4, sodium_mg: 1,   potassium_mg: 77,  phosphorus_mg: 12 },
+  { id: 'greek-yogurt',    name: 'Greek Yogurt (plain)',    calories_kcal: 59,  carbs_g: 3.6,  protein_g: 10,   fat_g: 0.4,  fiber_g: 0,   sodium_mg: 36,  potassium_mg: 141, phosphorus_mg: 135 },
+  { id: 'almonds',         name: 'Almonds (raw)',           calories_kcal: 579, carbs_g: 22,   protein_g: 21,   fat_g: 50,   fiber_g: 12.5, sodium_mg: 1,  potassium_mg: 733, phosphorus_mg: 481 },
+  { id: 'olive-oil',       name: 'Olive Oil',               calories_kcal: 884, carbs_g: 0,    protein_g: 0,    fat_g: 100,  fiber_g: 0,   sodium_mg: 2,   potassium_mg: 1,   phosphorus_mg: 0 },
+]
