@@ -8,26 +8,16 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FOODS } from "@/data/foods";
-import { computeConstraints } from "@/lib/compute-constraints";
-import type { MealEntry } from "@/stores/meal-plan";
+import { checkViolations } from "@/lib/check-violations";
+import { calculateTotals } from "@/lib/nutrition-values";
 import { type MealType, useMealPlanStore } from "@/stores/meal-plan";
 import { usePatientStore } from "@/stores/patient";
+
 
 export const Route = createFileRoute("/meal-planner/")({
 	component: MealPlannerPage,
 });
 
-// Types
-type Totals = {
-	calories_kcal: number;
-	carbs_g: number;
-	protein_g: number;
-	fat_g: number;
-	fiber_g: number;
-	sodium_mg: number;
-	potassium_mg: number;
-	phosphorus_mg: number;
-};
 
 // Constants
 const MEAL_TABS: { value: MealType; label: string }[] = [
@@ -37,46 +27,6 @@ const MEAL_TABS: { value: MealType; label: string }[] = [
 	{ value: "snack", label: "Snack" },
 ];
 
-const emptyTotals: Totals = {
-	calories_kcal: 0,
-	carbs_g: 0,
-	protein_g: 0,
-	fat_g: 0,
-	fiber_g: 0,
-	sodium_mg: 0,
-	potassium_mg: 0,
-	phosphorus_mg: 0,
-};
-
-// Helper to calculate totals for a list of meal entries
-function calculateTotals(entries: MealEntry[]): Totals {
-	return entries.reduce<Totals>((acc, entry) => {
-		const food = FOODS.find((f) => f.id === entry.foodId);
-		if (!food) return acc;
-
-		const factor = entry.grams / 100; // nutrients are per 100g
-		return {
-			calories_kcal: acc.calories_kcal + food.calories_kcal * factor,
-			carbs_g: acc.carbs_g + food.carbs_g * factor,
-			protein_g: acc.protein_g + food.protein_g * factor,
-			fat_g: acc.fat_g + food.fat_g * factor,
-			fiber_g: acc.fiber_g + food.fiber_g * factor,
-			sodium_mg: acc.sodium_mg + food.sodium_mg * factor,
-			potassium_mg: acc.potassium_mg + food.potassium_mg * factor,
-			phosphorus_mg: acc.phosphorus_mg + food.phosphorus_mg * factor,
-		};
-	}, emptyTotals);
-}
-// Helper to get the relevant nutrient value from totals based on constraint key
-function getNutrientFromTotals(totals: Totals, constraintKey: string): number {
-	if (constraintKey.startsWith("carbs")) return totals.carbs_g;
-	if (constraintKey.startsWith("protein")) return totals.protein_g;
-	if (constraintKey.startsWith("fiber")) return totals.fiber_g;
-	if (constraintKey.startsWith("sodium")) return totals.sodium_mg;
-	if (constraintKey.startsWith("potassium")) return totals.potassium_mg;
-	if (constraintKey.startsWith("phosphorus")) return totals.phosphorus_mg;
-	return 0; // energy, fluid, calcium not in food data yet
-}
 
 // Main component
 function MealPlannerPage() {
@@ -89,60 +39,18 @@ function MealPlannerPage() {
 
 	const [search, setSearch] = useState("");
 	const [activeMeal, setActiveMeal] = useState<MealType>("breakfast");
+
 	// Compute daily totals (all meals combined)
 	const dailyTotals = useMemo(() => {
 		const allEntries = Object.values(meals).flat();
 		return calculateTotals(allEntries);
 	}, [meals]);
+
 	// Compute constraint violations
-	const constraintViolations = useMemo(() => {
-		if (!patient) return [];
-		const violations: Array<{
-			nutrient: string;
-			actual: number;
-			max: number;
-			unit: string;
-			scope: "meal" | "day";
-			mealName?: string;
-		}> = [];
-		const computed = computeConstraints(patient.conditions, patient.weightKg);
-
-		// Check per-day constraints
-		for (const c of computed) {
-			if (c.scope !== "day") continue;
-			const actualValue = getNutrientFromTotals(dailyTotals, c.key);
-			if (actualValue > c.value) {
-				violations.push({
-					nutrient: c.nutrient,
-					actual: actualValue,
-					max: c.value,
-					unit: c.unit,
-					scope: "day",
-				});
-			}
-		}
-
-		// Check per-meal constraints
-		for (const c of computed) {
-			if (c.scope !== "meal") continue;
-			for (const [mealType, entries] of Object.entries(meals)) {
-				const mealTotals = calculateTotals(entries);
-				const actualValue = getNutrientFromTotals(mealTotals, c.key);
-				if (actualValue > c.value) {
-					violations.push({
-						nutrient: c.nutrient,
-						actual: actualValue,
-						max: c.value,
-						unit: c.unit,
-						scope: "meal",
-						mealName: mealType.charAt(0).toUpperCase() + mealType.slice(1),
-					});
-				}
-			}
-		}
-
-		return violations;
-	}, [meals, dailyTotals, patient]);
+  const constraintViolations = useMemo(() => {
+    if (!patient) return [];
+    return checkViolations(patient.conditions, patient.weightKg, meals, dailyTotals);
+  }, [meals, dailyTotals, patient]);
 
 	// Filter foods by search
 	const filteredFoods = useMemo(() => {
